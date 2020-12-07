@@ -1,31 +1,31 @@
 version: '3'
 
 services:
-  test_db:
-    container_name: test_db
+  test_database:
+    container_name: test_database
     image: 'mysql:8.0.22'
     command: --default-authentication-plugin=mysql_native_password
     ports:
       - '3308:3306'
     environment:
       - MYSQL_ROOT_PASSWORD=root
-      - MYSQL_DATABASE=p3_api_database_test
+      - MYSQL_DATABASE=quest_middleware_database_test
     tmpfs: /var/lib/mysql
-  db:
+  database:
     image: 'mysql:8.0.22'
     command: --default-authentication-plugin=mysql_native_password
-    container_name: db
+    container_name: database
     ports:
       - '3307:3306'
     environment:
       - MYSQL_ROOT_PASSWORD=root
-      - MYSQL_DATABASE=p3_api_database
+      - MYSQL_DATABASE=quest_middleware_database
     volumes:
       - p3-db:/var/lib/mysql
-  server:
-    container_name: server
+  server_middleware:
+    container_name: server_middleware
     depends_on:
-      - db
+      - database
     build: '.'
     volumes:
       - .:/usr/src/app
@@ -33,8 +33,8 @@ services:
     environment:
       - DB_USER=root
       - DB_PASS=root
-      - DB_NAME=p3_api_database
-      - DB_HOST=db
+      - DB_NAME=quest_middleware_database
+      - DB_HOST=database
       - DB_PORT=3306
     ports:
       - '5000:5000'
